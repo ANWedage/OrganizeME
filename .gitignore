@@ -30,3 +30,6 @@ Thumbs.db
 ## Release build artifacts (produced by GitHub Actions / local publish)
 publish/
 installer-output/
+
+
+.env
