@@ -47,3 +47,29 @@ Name: "{commondesktop}\{#AppName}";   Filename: "{app}\{#AppExeName}"; Tasks: de
 
 [Run]
 Filename: "{app}\{#AppExeName}"; Description: "Launch {#AppName}"; Flags: nowait postinstall skipifsilent
+
+[UninstallRun]
+; Kill the running process before uninstalling so files are not locked
+Filename: "taskkill.exe"; Parameters: "/F /IM {#AppExeName}"; Flags: runhidden skipifdoesntexist; RunOnceId: "KillApp"
+
+[Code]
+procedure CurUninstallStepChanged(CurUninstallStep: TUninstallStep);
+var
+  AppDataFolder: String;
+  MsgResult: Integer;
+begin
+  if CurUninstallStep = usPostUninstall then
+  begin
+    AppDataFolder := ExpandConstant('{userappdata}\OrganizeME');
+    if DirExists(AppDataFolder) then
+    begin
+      MsgResult := MsgBox(
+        'Do you want to remove all OrganizeME data?' + #13#10 +
+        'This includes your settings, file history, and logs.' + #13#10#13#10 +
+        AppDataFolder,
+        mbConfirmation, MB_YESNO);
+      if MsgResult = IDYES then
+        DelTree(AppDataFolder, True, True, True);
+    end;
+  end;
+end;

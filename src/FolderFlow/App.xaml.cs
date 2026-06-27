@@ -18,9 +18,21 @@ public partial class App : Application
 
     private TaskbarIcon? _trayIcon;
     private MainWindow? _mainWindow;
+    private System.Threading.Mutex? _instanceMutex;
 
     protected override async void OnStartup(StartupEventArgs e)
     {
+        _instanceMutex = new System.Threading.Mutex(true, "OrganizeME_SingleInstance", out bool isNewInstance);
+        if (!isNewInstance)
+        {
+            MessageBox.Show("OrganizeME is already running.\nCheck the system tray icon.", "OrganizeME",
+                MessageBoxButton.OK, MessageBoxImage.Information);
+            _instanceMutex.Dispose();
+            _instanceMutex = null;
+            Environment.Exit(0);
+            return;
+        }
+
         base.OnStartup(e);
 
         ConfigureLogging();
@@ -150,10 +162,15 @@ public partial class App : Application
             var update = await updateService.CheckForUpdateAsync();
             if (update is null) return;
 
-            var notifier = Services.GetRequiredService<INotificationService>();
-            notifier.ShowInfo(
-                "OrganizeME Update Available",
-                $"Version {update.Version.ToString(3)} is ready. Open Settings → Updates to download.");
+            // Show the update dialog on the UI thread
+            Current.Dispatcher.Invoke(() =>
+            {
+                var window = new FolderFlow.Views.UpdateAvailableWindow(update)
+                {
+                    Owner = _mainWindow
+                };
+                window.ShowDialog();
+            });
         }
         catch
         {
@@ -164,6 +181,8 @@ public partial class App : Application
     protected override void OnExit(ExitEventArgs e)
     {
         _trayIcon?.Dispose();
+        _instanceMutex?.ReleaseMutex();
+        _instanceMutex?.Dispose();
         Log.CloseAndFlush();
         base.OnExit(e);
     }

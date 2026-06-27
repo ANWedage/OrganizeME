@@ -37,8 +37,10 @@
                 </StackPanel>
             </StackPanel>
 
-            <Button Grid.Column="1" Content="⚙ Settings" Style="{StaticResource SecondaryButton}"
-                    Click="OnSettingsClicked" VerticalAlignment="Center" />
+            <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                <Button Content="⚙ Settings" Style="{StaticResource SecondaryButton}"
+                        Click="OnSettingsClicked" />
+            </StackPanel>
         </Grid>
 
         <!-- Status card -->
