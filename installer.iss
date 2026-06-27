@@ -24,8 +24,7 @@ OutputDir=installer-output
 OutputBaseFilename={#AppName}-v{#AppVersion}-Setup
 Compression=lzma
 SolidCompression=yes
-PrivilegesRequired=lowest
-PrivilegesRequiredOverridesAllowed=dialog
+PrivilegesRequired=admin
 UninstallDisplayIcon={app}\{#AppExeName}
 ; Use Windows 10+ style wizard
 WizardStyle=modern

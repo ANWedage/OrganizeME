@@ -62,16 +62,7 @@
                 <!-- Rules -->
                 <Border Style="{StaticResource Card}">
                     <StackPanel>
-                        <Grid Margin="0,0,0,10">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="Auto" />
-                            </Grid.ColumnDefinitions>
-                            <TextBlock Grid.Column="0" Text="Folder Rules" FontWeight="SemiBold"
-                                       VerticalAlignment="Center" />
-                            <Button Grid.Column="1" Content="Restore Defaults" Style="{StaticResource SecondaryButton}"
-                                    Command="{Binding RestoreDefaultsCommand}" />
-                        </Grid>
+                        <TextBlock Text="Folder Rules" FontWeight="SemiBold" Margin="0,0,0,10" />
 
                         <ItemsControl ItemsSource="{Binding Rules}">
                             <ItemsControl.ItemTemplate>
@@ -115,11 +106,10 @@
                                     IsEnabled="{Binding IsCheckingUpdate, Converter={StaticResource InverseBoolConverter}}"
                                     Margin="0,0,8,0" />
 
-                            <!-- Download &amp; Install button — only visible when an update is found -->
-                            <Button Content="Download &amp; Install"
+                            <!-- View Release Notes button — only visible when an update is found -->
+                            <Button Content="⬇ View Release Notes &amp; Update"
                                     Style="{StaticResource PrimaryButton}"
-                                    Command="{Binding DownloadUpdateCommand}"
-                                    IsEnabled="{Binding IsDownloading, Converter={StaticResource InverseBoolConverter}}"
+                                    Click="OnViewReleaseNotesClicked"
                                     Visibility="{Binding IsUpdateAvailable, Converter={StaticResource BoolToVisibilityConverter}}" />
                         </StackPanel>
                     </StackPanel>

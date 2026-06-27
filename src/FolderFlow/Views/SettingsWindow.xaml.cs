@@ -1,5 +1,7 @@
 using System.Windows;
+using FolderFlow.Services.Interfaces;
 using FolderFlow.ViewModels;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace FolderFlow.Views;
 
@@ -23,5 +25,14 @@ public partial class SettingsWindow : Window
     private void OnCancelClicked(object sender, RoutedEventArgs e)
     {
         Close();
+    }
+
+    private void OnViewReleaseNotesClicked(object sender, RoutedEventArgs e)
+    {
+        var pendingUpdate = _viewModel.PendingUpdate;
+        if (pendingUpdate is null) return;
+
+        var window = new UpdateAvailableWindow(pendingUpdate) { Owner = this };
+        window.ShowDialog();
     }
 }

@@ -10,12 +10,12 @@ public static class ReleaseNotes
     private static readonly Dictionary<string, string> _notes = new()
     {
         
-        ["1.0.4"] = """
-            • Fixed a bug where the app would crash if the monitored folder was deleted or inaccessible.
+        ["1.0.5"] = """
+            • Added a "View Release Notes" button in the settings window to view release notes for available updates.
             """,
 
         // ── Add new versions below ──────────────────────────────────────────
-        // ["1.0.5"] = """
+        // ["1.0.6"] = """
         //     • Description of new features or fixes
         //     """,
     };

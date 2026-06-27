@@ -25,6 +25,7 @@ public class SettingsViewModel : ViewModelBase
     private int _downloadProgress;
     private bool _isDownloading;
     private UpdateInfo? _pendingUpdate;
+    public UpdateInfo? PendingUpdate => _pendingUpdate;
 
     public string UpdateStatus
     {
