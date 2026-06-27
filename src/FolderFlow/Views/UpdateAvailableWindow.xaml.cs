@@ -1,5 +1,4 @@
 using System.Windows;
-using FolderFlow.Models;
 using FolderFlow.Services.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -19,12 +18,9 @@ public partial class UpdateAvailableWindow : Window
         TitleText.Text = $"Version {update.Version.ToString(3)} is available!";
         SubtitleText.Text = $"You are running v{App.Services.GetRequiredService<IUpdateService>().CurrentVersion.ToString(3)}. A new version is ready to install.";
 
-        ReleaseNotesText.Text = string.IsNullOrWhiteSpace(update.ReleaseNotes)
-            ? ReleaseNotes.Get(update.Version.ToString(3))
-            : update.ReleaseNotes;
-
-        if (string.IsNullOrWhiteSpace(ReleaseNotesText.Text))
-            ReleaseNotesText.Text = "No release notes provided.";
+        ReleaseNotesText.Text = !string.IsNullOrWhiteSpace(update.ReleaseNotes)
+            ? update.ReleaseNotes
+            : "No release notes provided.";
     }
 
     private async void OnDownloadClicked(object sender, RoutedEventArgs e)

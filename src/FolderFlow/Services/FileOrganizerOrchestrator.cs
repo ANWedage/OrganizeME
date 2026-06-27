@@ -81,4 +81,17 @@ public class FileOrganizerOrchestrator : IFileOrganizerOrchestrator
 
         await _history.AddEntryAsync(entry);
     }
+
+    public async Task OrganizeExistingFilesAsync(string folderPath, IProgress<(int done, int total)>? progress = null, CancellationToken ct = default)
+    {
+        var files = Directory.GetFiles(folderPath, "*", SearchOption.TopDirectoryOnly);
+        var total = files.Length;
+
+        for (int i = 0; i < total; i++)
+        {
+            ct.ThrowIfCancellationRequested();
+            await ProcessNewFileAsync(files[i]);
+            progress?.Report((i + 1, total));
+        }
+    }
 }

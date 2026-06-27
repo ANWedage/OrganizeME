@@ -3,6 +3,7 @@ using System.IO;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Reflection;
+using System.Text.Json;
 using System.Text.Json.Serialization;
 using FolderFlow.Services.Interfaces;
 using Serilog;
@@ -16,6 +17,9 @@ public sealed class UpdateService : IUpdateService
     // -----------------------------------------------------------------------
     private const string GitHubOwner = "ANWedage";
     private const string GitHubRepo  = "OrganizeME";
+
+    private static readonly string ReleasesJsonUrl =
+        $"https://raw.githubusercontent.com/{GitHubOwner}/{GitHubRepo}/main/releases.json";
     // -----------------------------------------------------------------------
 
     private static readonly HttpClient _http = new()
@@ -61,7 +65,12 @@ public sealed class UpdateService : IUpdateService
             var downloadUrl = asset?.BrowserDownloadUrl ?? release.HtmlUrl;
             var fileName    = asset?.Name ?? $"OrganizeME-{release.TagName}.exe";
 
-            return new UpdateInfo(remoteVersion, release.TagName, release.Body ?? string.Empty, downloadUrl, fileName);
+            // Fetch notes from releases.json; fall back to GitHub release body.
+            var notes = await FetchReleaseNotesAsync(tagVersion) is { Length: > 0 } n
+                ? n
+                : release.Body ?? string.Empty;
+
+            return new UpdateInfo(remoteVersion, release.TagName, notes, downloadUrl, fileName);
         }
         catch (Exception ex)
         {
@@ -97,6 +106,23 @@ public sealed class UpdateService : IUpdateService
 
         _logger.Information("Update downloaded to {Path}. Launching installer.", tempPath);
         Process.Start(new ProcessStartInfo(tempPath) { UseShellExecute = true });
+    }
+
+    private async Task<string> FetchReleaseNotesAsync(string version)
+    {
+        try
+        {
+            var json = await _http.GetStringAsync(ReleasesJsonUrl);
+            var dict = JsonSerializer.Deserialize<Dictionary<string, string>>(json);
+            if (dict is not null && dict.TryGetValue(version, out var notes))
+                return notes;
+        }
+        catch
+        {
+            // Best-effort — silently ignore network/parse errors.
+        }
+
+        return string.Empty;
     }
 
     // ── GitHub JSON models ───────────────────────────────────────────────────

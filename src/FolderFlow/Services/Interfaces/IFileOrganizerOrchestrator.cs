@@ -8,4 +8,5 @@ namespace FolderFlow.Services.Interfaces;
 public interface IFileOrganizerOrchestrator
 {
     Task ProcessNewFileAsync(string filePath);
+    Task OrganizeExistingFilesAsync(string folderPath, IProgress<(int done, int total)>? progress = null, CancellationToken ct = default);
 }

@@ -10,7 +10,7 @@
     <ApplicationIcon>Resources\Icons\app.ico</ApplicationIcon>
     <AssemblyName>OrganizeME</AssemblyName>
     <RootNamespace>FolderFlow</RootNamespace>
-    <Version>1.0.5</Version>
+    <Version>1.1.8</Version>
     <Authors>Adeepa Wedage</Authors>
     <Product>OrganizeME</Product>
   </PropertyGroup>

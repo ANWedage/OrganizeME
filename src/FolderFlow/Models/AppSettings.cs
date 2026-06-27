@@ -38,6 +38,12 @@ public class AppSettings
 
     public List<FolderRule> Rules { get; set; } = FolderRule_Defaults.GetDefaultRules();
 
+    /// <summary>
+    /// Set to true after the first-run prompt to organize existing files has been shown.
+    /// Prevents the prompt from appearing again on subsequent launches.
+    /// </summary>
+    public bool HasPromptedInitialScan { get; set; } = false;
+
     private static string GetDefaultDownloadsPath()
     {
         var userProfile = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);

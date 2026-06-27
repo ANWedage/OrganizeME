@@ -65,6 +65,9 @@ public partial class App : Application
             var mainViewModel = (MainViewModel)_mainWindow.DataContext;
             await mainViewModel.InitializeAsync();
 
+            // First-run: prompt to organize existing files.
+            _ = PromptInitialScanIfNeededAsync(settingsService);
+
             // Background update check — show a toast if a new version is available.
             _ = CheckForUpdateInBackgroundAsync();
         }
@@ -151,6 +154,37 @@ public partial class App : Application
         _mainWindow.Show();
         _mainWindow.WindowState = WindowState.Normal;
         _mainWindow.Activate();
+    }
+
+    private async Task PromptInitialScanIfNeededAsync(ISettingsService settingsService)
+    {
+        try
+        {
+            await Task.Delay(TimeSpan.FromMilliseconds(800)); // let main window render first
+
+            var settings = settingsService.Current;
+            if (settings.HasPromptedInitialScan) return;
+
+            var folder = settings.MonitoredFolderPath;
+            if (!System.IO.Directory.Exists(folder)) return;
+
+            var hasFiles = System.IO.Directory.EnumerateFiles(folder, "*", System.IO.SearchOption.TopDirectoryOnly).Any();
+            if (!hasFiles) return;
+
+            // Mark as prompted so it never shows again
+            settings.HasPromptedInitialScan = true;
+            await settingsService.SaveAsync();
+
+            Current.Dispatcher.Invoke(() =>
+            {
+                var window = new FolderFlow.Views.InitialScanWindow(folder) { Owner = _mainWindow };
+                window.ShowDialog();
+            });
+        }
+        catch
+        {
+            // Best-effort — never crash startup.
+        }
     }
 
     private async Task CheckForUpdateInBackgroundAsync()
