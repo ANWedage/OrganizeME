@@ -32,7 +32,7 @@ public class FileOrganizerOrchestrator : IFileOrganizerOrchestrator
         _logger = logger.ForContext<FileOrganizerOrchestrator>();
     }
 
-    public async Task ProcessNewFileAsync(string filePath)
+    public async Task ProcessNewFileAsync(string filePath, bool suppressNotification = false)
     {
         var fileName = Path.GetFileName(filePath);
         var extension = Path.GetExtension(filePath).TrimStart('.').ToLowerInvariant();
@@ -65,7 +65,8 @@ public class FileOrganizerOrchestrator : IFileOrganizerOrchestrator
                 entry.NewPath = destination;
                 entry.Success = true;
 
-                _notifications.ShowFileOrganized(fileName, category);
+                if (!suppressNotification)
+                    _notifications.ShowFileOrganized(fileName, category);
                 _logger.Information("Organized {File} into {Category}", fileName, category);
             }
         }
@@ -86,12 +87,17 @@ public class FileOrganizerOrchestrator : IFileOrganizerOrchestrator
     {
         var files = Directory.GetFiles(folderPath, "*", SearchOption.TopDirectoryOnly);
         var total = files.Length;
+        int succeeded = 0;
 
         for (int i = 0; i < total; i++)
         {
             ct.ThrowIfCancellationRequested();
-            await ProcessNewFileAsync(files[i]);
+            await ProcessNewFileAsync(files[i], suppressNotification: true);
+            succeeded++;
             progress?.Report((i + 1, total));
         }
+
+        if (succeeded > 0)
+            _notifications.ShowInfo("OrganizeME", $"{succeeded} file{(succeeded == 1 ? "" : "s")} organized successfully.");
     }
 }

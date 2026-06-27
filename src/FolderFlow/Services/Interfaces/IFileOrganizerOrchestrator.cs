@@ -7,6 +7,6 @@ namespace FolderFlow.Services.Interfaces;
 /// </summary>
 public interface IFileOrganizerOrchestrator
 {
-    Task ProcessNewFileAsync(string filePath);
+    Task ProcessNewFileAsync(string filePath, bool suppressNotification = false);
     Task OrganizeExistingFilesAsync(string folderPath, IProgress<(int done, int total)>? progress = null, CancellationToken ct = default);
 }

@@ -1,4 +1,4 @@
 {
-  "1.1.8": "• Add Existing Files Organize Prompt on first run (New Feature)\n• Block multiple app instances with a friendly message\n• Update dialog now shows release notes before downloading\n• Uninstaller now offers to remove all app data"
+  "1.1.9": "• Added a first-run prompt to organize existing files in the Downloads folder.\n • Fixed an issue of bulk notifications"
 
 }
