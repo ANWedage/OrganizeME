@@ -1,0 +1,139 @@
+<Window x:Class="FolderFlow.Views.SettingsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:helpers="clr-namespace:FolderFlow.Helpers"
+        Title="OrganizeME — Settings" Height="600" Width="640"
+        Background="{StaticResource BackgroundBrush}"
+        WindowStartupLocation="CenterOwner">
+
+    <Window.Resources>
+        <helpers:ExtensionsListConverter x:Key="ExtensionsListConverter" />
+        <helpers:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
+        <helpers:StringToVisibilityConverter x:Key="StringToVisibilityConverter" />
+        <helpers:InverseBooleanConverter x:Key="InverseBoolConverter" />
+    </Window.Resources>
+
+    <Grid Margin="24">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <TextBlock Grid.Row="0" Text="Settings" Style="{StaticResource HeaderText}" Margin="0,0,0,16" />
+
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+            <StackPanel>
+
+                <!-- Monitored folder -->
+                <Border Style="{StaticResource Card}" Margin="0,0,0,14">
+                    <StackPanel>
+                        <TextBlock Text="Monitored Folder" FontWeight="SemiBold" Margin="0,0,0,8" />
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <TextBox Grid.Column="0" Text="{Binding MonitoredFolderPath}"
+                                     Padding="8" VerticalContentAlignment="Center"
+                                     IsReadOnly="True" Margin="0,0,8,0" />
+                            <Button Grid.Column="1" Content="Browse…" Style="{StaticResource SecondaryButton}"
+                                    Command="{Binding BrowseFolderCommand}" />
+                        </Grid>
+                    </StackPanel>
+                </Border>
+
+                <!-- Toggles -->
+                <Border Style="{StaticResource Card}" Margin="0,0,0,14">
+                    <StackPanel>
+                        <TextBlock Text="General" FontWeight="SemiBold" Margin="0,0,0,10" />
+
+                        <CheckBox Content="Start with Windows" IsChecked="{Binding StartWithWindows}"
+                                  Margin="0,0,0,10" />
+                        <CheckBox Content="Show notifications when files are organized"
+                                  IsChecked="{Binding NotificationsEnabled}" Margin="0,0,0,10" />
+                        <CheckBox Content="Automatically move files (turn off for a dry run / preview only)"
+                                  IsChecked="{Binding AutoMoveEnabled}" Margin="0,0,0,10" />
+                        <CheckBox Content="Enable AI-assisted categorization (requires Ollama — coming in V2)"
+                                  IsChecked="{Binding AiEnabled}" IsEnabled="False" />
+                    </StackPanel>
+                </Border>
+
+                <!-- Rules -->
+                <Border Style="{StaticResource Card}">
+                    <StackPanel>
+                        <Grid Margin="0,0,0,10">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0" Text="Folder Rules" FontWeight="SemiBold"
+                                       VerticalAlignment="Center" />
+                            <Button Grid.Column="1" Content="Restore Defaults" Style="{StaticResource SecondaryButton}"
+                                    Command="{Binding RestoreDefaultsCommand}" />
+                        </Grid>
+
+                        <ItemsControl ItemsSource="{Binding Rules}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Border BorderBrush="{StaticResource BorderBrush2}" BorderThickness="0,0,0,1"
+                                            Padding="0,8">
+                                        <StackPanel>
+                                            <TextBlock Text="{Binding Category}" FontWeight="SemiBold" FontSize="13" />
+                                            <TextBlock Text="{Binding Extensions, Converter={StaticResource ExtensionsListConverter}}"
+                                                       Style="{StaticResource SubText}" TextWrapping="Wrap" />
+                                        </StackPanel>
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </StackPanel>
+                </Border>
+
+                <!-- Updates -->
+                <Border Style="{StaticResource Card}" Margin="0,14,0,0">
+                    <StackPanel>
+                        <TextBlock Text="Updates" FontWeight="SemiBold" Margin="0,0,0,10" />
+
+                        <TextBlock Text="{Binding CurrentVersionText}" Style="{StaticResource SubText}" Margin="0,0,0,8" />
+
+                        <!-- Status text -->
+                        <TextBlock Text="{Binding UpdateStatus}" TextWrapping="Wrap"
+                                   Visibility="{Binding UpdateStatus, Converter={StaticResource StringToVisibilityConverter}}"
+                                   Margin="0,0,0,8" />
+
+                        <!-- Download progress bar -->
+                        <ProgressBar Value="{Binding DownloadProgress, Mode=OneWay}" Minimum="0" Maximum="100"
+                                     Height="6" Margin="0,0,0,10"
+                                     Visibility="{Binding IsDownloading, Converter={StaticResource BoolToVisibilityConverter}}" />
+
+                        <StackPanel Orientation="Horizontal">
+                            <!-- Check for Updates button -->
+                            <Button Content="Check for Updates"
+                                    Style="{StaticResource SecondaryButton}"
+                                    Command="{Binding CheckForUpdateCommand}"
+                                    IsEnabled="{Binding IsCheckingUpdate, Converter={StaticResource InverseBoolConverter}}"
+                                    Margin="0,0,8,0" />
+
+                            <!-- Download &amp; Install button — only visible when an update is found -->
+                            <Button Content="Download &amp; Install"
+                                    Style="{StaticResource PrimaryButton}"
+                                    Command="{Binding DownloadUpdateCommand}"
+                                    IsEnabled="{Binding IsDownloading, Converter={StaticResource InverseBoolConverter}}"
+                                    Visibility="{Binding IsUpdateAvailable, Converter={StaticResource BoolToVisibilityConverter}}" />
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+
+            </StackPanel>
+        </ScrollViewer>
+
+        <!-- Footer buttons -->
+        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,16,0,0">
+            <Button Content="Cancel" Style="{StaticResource SecondaryButton}" Margin="0,0,8,0"
+                    Click="OnCancelClicked" />
+            <Button Content="Save" Style="{StaticResource PrimaryButton}"
+                    Click="OnSaveClicked" />
+        </StackPanel>
+    </Grid>
+</Window>

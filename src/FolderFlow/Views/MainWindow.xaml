@@ -1,0 +1,121 @@
+<Window x:Class="FolderFlow.Views.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:helpers="clr-namespace:FolderFlow.Helpers"
+        Title="OrganizeME" Height="640" Width="900"
+        Icon="pack://application:,,,/Resources/Icons/logo.png"
+        Background="{StaticResource BackgroundBrush}"
+        WindowStartupLocation="CenterScreen"
+        Closing="MainWindow_OnClosing">
+
+    <Window.Resources>
+        <helpers:SuccessToBrushConverter x:Key="SuccessToBrush" />
+        <helpers:SuccessToSymbolConverter x:Key="SuccessToSymbol" />
+        <helpers:InverseBooleanConverter x:Key="InverseBoolean" />
+    </Window.Resources>
+
+    <Grid Margin="28">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <!-- Header -->
+        <Grid Grid.Row="0" Margin="0,0,0,20">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
+                <Image Source="pack://application:,,,/Resources/Icons/logo.png" Width="72" Height="72" Margin="0,0,16,0" VerticalAlignment="Center" RenderOptions.BitmapScalingMode="HighQuality" />
+                <StackPanel VerticalAlignment="Center">
+                    <TextBlock Text="OrganizeME" Style="{StaticResource HeaderText}" />
+                    <TextBlock Text="AI Smart Download Organizer" Style="{StaticResource SubText}" />
+                </StackPanel>
+            </StackPanel>
+
+            <Button Grid.Column="1" Content="⚙ Settings" Style="{StaticResource SecondaryButton}"
+                    Click="OnSettingsClicked" VerticalAlignment="Center" />
+        </Grid>
+
+        <!-- Status card -->
+        <Border Grid.Row="1" Style="{StaticResource Card}" Margin="0,0,0,20">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <StackPanel Grid.Column="0">
+                    <StackPanel Orientation="Horizontal">
+                        <Ellipse Width="10" Height="10" Margin="0,0,8,0" VerticalAlignment="Center">
+                            <Ellipse.Style>
+                                <Style TargetType="Ellipse">
+                                    <Setter Property="Fill" Value="{StaticResource ErrorBrush}" />
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding IsMonitoring}" Value="True">
+                                            <Setter Property="Fill" Value="{StaticResource SuccessBrush}" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Ellipse.Style>
+                        </Ellipse>
+                        <TextBlock Text="{Binding StatusText}" FontWeight="SemiBold" FontSize="15"
+                                   Foreground="{StaticResource TextPrimaryBrush}" />
+                    </StackPanel>
+                    <TextBlock Text="{Binding MonitoredFolder}" Style="{StaticResource SubText}" Margin="18,4,0,0" />
+                </StackPanel>
+
+                <StackPanel Grid.Column="1" Orientation="Horizontal">
+                    <Button Content="Start" Style="{StaticResource PrimaryButton}" Margin="0,0,8,0"
+                            Command="{Binding StartMonitoringCommand}" />
+                    <Button Content="Stop" Style="{StaticResource SecondaryButton}"
+                            Command="{Binding StopMonitoringCommand}" />
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <!-- Recent activity -->
+        <Border Grid.Row="2" Style="{StaticResource Card}">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+
+                <TextBlock Grid.Row="0" Text="Recent Activity" FontWeight="SemiBold" FontSize="16"
+                           Margin="0,0,0,12" Foreground="{StaticResource TextPrimaryBrush}" />
+
+                <ListView Grid.Row="1" ItemsSource="{Binding RecentActivity}"
+                          BorderThickness="0" Background="Transparent"
+                          ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                    <ListView.View>
+                        <GridView>
+                            <GridViewColumn Header="" Width="36">
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding Success, Converter={StaticResource SuccessToSymbol}}"
+                                                   Foreground="{Binding Success, Converter={StaticResource SuccessToBrush}}"
+                                                   FontWeight="Bold" />
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
+                            <GridViewColumn Header="File" Width="280" DisplayMemberBinding="{Binding FileName}" />
+                            <GridViewColumn Header="Category" Width="140" DisplayMemberBinding="{Binding Category}" />
+                            <GridViewColumn Header="Time" Width="150" DisplayMemberBinding="{Binding Timestamp, StringFormat='{}{0:g}'}" />
+                            <GridViewColumn Header="Details" Width="220" DisplayMemberBinding="{Binding ErrorMessage}" />
+                        </GridView>
+                    </ListView.View>
+                </ListView>
+            </Grid>
+        </Border>
+
+        <!-- Footer -->
+        <TextBlock Grid.Row="3" Text="Powered by Adeepa Wedage"
+                   HorizontalAlignment="Center" Margin="0,10,0,0"
+                   FontSize="11" Foreground="{StaticResource TextSecondaryBrush}" />
+    </Grid>
+</Window>

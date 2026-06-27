@@ -1,0 +1,16 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "FolderFlow (Debug)",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "build",
+            "program": "${workspaceFolder}/src/FolderFlow/bin/Debug/net8.0-windows10.0.19041.0/OrganizeME.exe",
+            "args": [],
+            "cwd": "${workspaceFolder}/src/FolderFlow",
+            "console": "internalConsole",
+            "stopAtEntry": false
+        }
+    ]
+}

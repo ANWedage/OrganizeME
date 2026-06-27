@@ -1,0 +1,32 @@
+## .NET build output
+[Bb]in/
+[Oo]bj/
+*.user
+*.suo
+
+## Visual Studio
+.vs/
+
+## VS Code
+.vscode/*
+!.vscode/launch.json
+!.vscode/tasks.json
+!.vscode/settings.json
+
+## Rider
+.idea/
+
+## NuGet
+*.nupkg
+**/packages/*
+
+## OS files
+.DS_Store
+Thumbs.db
+
+## Logs (FolderFlow writes its real logs to %AppData%, not here, but just in case)
+*.log
+
+## Release build artifacts (produced by GitHub Actions / local publish)
+publish/
+installer-output/

@@ -1,0 +1,75 @@
+name: Build & Release
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Trigger: push a tag like  v1.1.0
+#   git tag v1.1.0
+#   git push origin v1.1.0
+# That's the ONLY thing you need to do — everything else is automatic.
+# ─────────────────────────────────────────────────────────────────────────────
+on:
+  push:
+    tags:
+      - "v*.*.*"
+
+jobs:
+  release:
+    name: Build installer & publish release
+    runs-on: windows-latest
+    permissions:
+      contents: write   # needed to create the GitHub Release
+
+    steps:
+      # ── 1. Checkout ────────────────────────────────────────────────────────
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # ── 2. Parse version from tag (strips leading "v") ────────────────────
+      - name: Extract version
+        id: version
+        shell: pwsh
+        run: |
+          $tag = "${{ github.ref_name }}"          # e.g.  v1.1.0
+          $ver = $tag.TrimStart('v')               # e.g.  1.1.0
+          echo "TAG=$tag"   >> $env:GITHUB_OUTPUT
+          echo "VER=$ver"   >> $env:GITHUB_OUTPUT
+
+      # ── 3. Setup .NET 8 ────────────────────────────────────────────────────
+      - name: Setup .NET 8
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "8.0.x"
+
+      # ── 4. Publish self-contained single-file exe ─────────────────────────
+      - name: Publish
+        shell: pwsh
+        run: |
+          dotnet publish src/FolderFlow/OrganizeME.csproj `
+            -c Release `
+            -r win-x64 `
+            --self-contained true `
+            -p:PublishSingleFile=true `
+            -p:Version=${{ steps.version.outputs.VER }} `
+            -o publish
+
+      # ── 5. Install Inno Setup ──────────────────────────────────────────────
+      - name: Install Inno Setup
+        shell: pwsh
+        run: choco install innosetup --no-progress -y
+
+      # ── 6. Compile installer ───────────────────────────────────────────────
+      - name: Build installer
+        shell: pwsh
+        run: |
+          $ver = "${{ steps.version.outputs.VER }}"
+          & "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" `
+            /DAppVersion=$ver `
+            installer.iss
+
+      # ── 7. Create GitHub Release and upload installer ─────────────────────
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.version.outputs.TAG }}
+          name: "OrganizeME ${{ steps.version.outputs.TAG }}"
+          generate_release_notes: true          # auto-generates changelog from commits
+          files: installer-output/OrganizeME-${{ steps.version.outputs.TAG }}-Setup.exe
