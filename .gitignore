@@ -24,7 +24,7 @@
 .DS_Store
 Thumbs.db
 
-## Logs (FolderFlow writes its real logs to %AppData%, not here, but just in case)
+## Logs (OrganizeME writes its real logs to %AppData%, not here, but just in case)
 *.log
 
 ## Release build artifacts (produced by GitHub Actions / local publish)

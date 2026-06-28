@@ -1,6 +1,6 @@
-# FolderFlow — V1 (MVP)
+# OrganizeME — V1 (MVP)
 
-FolderFlow watches your Downloads folder and automatically sorts new
+OrganizeME watches your Downloads folder and automatically sorts new
 files into category folders (Documents, Pictures, Videos, etc.) based on
 their file extension. It runs quietly in the system tray, keeps a
 history of everything it moves, and shows a Windows notification each
@@ -41,9 +41,9 @@ That's the entire toolchain — no need for full Visual Studio.
 
 ## 2. Open the project
 
-1. Unzip the FolderFlow project folder somewhere, e.g. `C:\Dev\FolderFlow`.
-2. Open VS Code → **File → Open Folder** → select that `FolderFlow` folder
-   (the one containing `FolderFlow.sln`).
+1. Unzip the OrganizeME project folder somewhere, e.g. `C:\Dev\OrganizeME`.
+2. Open VS Code → **File → Open Folder** → select that `OrganizeME` folder
+   (the one containing `OrganizeME.sln`).
 3. VS Code will detect the C# project and may ask to add required assets
    for building/debugging — click **Yes**.
 
@@ -56,7 +56,7 @@ dotnet restore
 ```
 
 This downloads SQLite, Serilog, the tray-icon library, etc. — everything
-listed in `src/FolderFlow/FolderFlow.csproj`. You only need to do this
+listed in `src/OrganizeME/OrganizeME.csproj`. You only need to do this
 once (and again later if you add new packages).
 
 ## 4. Build the project
@@ -72,25 +72,25 @@ after it is often a side effect.
 ## 5. Run the app
 
 ```
-dotnet run --project src/FolderFlow/FolderFlow.csproj
+dotnet run --project src/OrganizeME/OrganizeME.csproj
 ```
 
 Or, in VS Code, just press **F5** (this uses the `.vscode/launch.json`
 already included in the project).
 
-**What you should see:** a window titled "FolderFlow" opens, showing a
+**What you should see:** a window titled "OrganizeME" opens, showing a
 status card and an empty "Recent Activity" list. It's already watching
 your real Downloads folder. A tray icon also appears near your clock.
 
 ### Try it out
 1. Download literally any file (a PDF, an image, anything) into your
    Downloads folder, or just copy/paste a file into it.
-2. Within a couple of seconds, FolderFlow should move it into a new
+2. Within a couple of seconds, OrganizeME should move it into a new
    subfolder like `Downloads\Documents\` or `Downloads\Pictures\`, show
    a notification, and add a row to "Recent Activity".
 
 ### Closing vs. quitting
-- Clicking the window's **X** just hides the window — FolderFlow keeps
+- Clicking the window's **X** just hides the window — OrganizeME keeps
   running in the tray (so it can keep organizing files in the
   background).
 - To fully quit, **right-click the tray icon → Exit**.
@@ -100,12 +100,12 @@ your real Downloads folder. A tray icon also appears near your clock.
 ## 6. Project structure (where everything lives)
 
 ```
-FolderFlow/
-├── FolderFlow.sln                  ← open this if you ever install full Visual Studio
+OrganizeME/
+├── OrganizeME.sln                  ← open this if you ever install full Visual Studio
 ├── .vscode/                        ← F5 debug + build task config for VS Code
-└── src/FolderFlow/
+└── src/OrganizeME/
     ├── App.xaml / App.xaml.cs      ← startup: wires up DI, logging, tray icon
-    ├── FolderFlow.csproj           ← project file: target framework + NuGet packages
+    ├── OrganizeME.csproj           ← project file: target framework + NuGet packages
     ├── Models/                     ← plain data classes (FileHistoryEntry, FolderRule, AppSettings)
     ├── Services/                   ← the actual logic (watching, moving, db, settings, notifications)
     │   └── Interfaces/             ← contracts the ViewModels depend on (not the concrete classes)
@@ -135,13 +135,13 @@ Version 2's AI categorizer will be a new class implementing
 
 ## 7. Where things are saved
 
-- **Settings**: `%AppData%\FolderFlow\settings.json`
-- **History database**: `%AppData%\FolderFlow\folderflow.db` (SQLite)
-- **Logs**: `%AppData%\FolderFlow\logs\folderflow-<date>.log`
+- **Settings**: `%AppData%\OrganizeME\settings.json`
+- **History database**: `%AppData%\OrganizeME\organizeme.db` (SQLite)
+- **Logs**: `%AppData%\OrganizeME\logs\organizeme-<date>.log`
 
 (`%AppData%` is usually `C:\Users\<you>\AppData\Roaming`.) If something
 isn't behaving as expected, the log file is the first place to look —
-every action FolderFlow takes is recorded there via Serilog.
+every action OrganizeME takes is recorded there via Serilog.
 
 ---
 
@@ -175,11 +175,11 @@ When you're ready to install this for real (not just `dotnet run` from
 source), publish a self-contained build:
 
 ```
-dotnet publish src/FolderFlow/FolderFlow.csproj -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true
+dotnet publish src/OrganizeME/OrganizeME.csproj -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true
 ```
 
-This produces a single `FolderFlow.exe` under
-`src/FolderFlow/bin/Release/net8.0-windows10.0.19041.0/win-x64/publish/`
+This produces a single `OrganizeME.exe` under
+`src/OrganizeME/bin/Release/net8.0-windows10.0.19041.0/win-x64/publish/`
 that runs on any Windows 10/11 PC without needing .NET installed. Inno
 Setup (mentioned in your original spec) can then wrap that `.exe` into a
 proper installer with a Start Menu shortcut — that's a good V1.1 task

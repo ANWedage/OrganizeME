@@ -2,7 +2,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.8.34330.188
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OrganizeME", "src\FolderFlow\OrganizeME.csproj", "{A1B2C3D4-E5F6-4A1B-8C2D-3E4F5A6B7C8D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OrganizeME", "src\OrganizeME\OrganizeME.csproj", "{A1B2C3D4-E5F6-4A1B-8C2D-3E4F5A6B7C8D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

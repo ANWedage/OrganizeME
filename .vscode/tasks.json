@@ -7,7 +7,7 @@
             "type": "process",
             "args": [
                 "build",
-                "${workspaceFolder}/src/FolderFlow/OrganizeME.csproj",
+                "${workspaceFolder}/src/OrganizeME/OrganizeME.csproj",
                 "/property:GenerateFullPaths=true",
                 "/consoleloggerparameters:NoSummary"
             ],
