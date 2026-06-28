@@ -116,8 +116,8 @@
         </Border>
 
         <!-- Footer -->
-        <TextBlock Grid.Row="3" Text="Powered by Adeepa Wedage"
+        <TextBlock Grid.Row="3" Text="Developed by Adeepa Wedage"
                    HorizontalAlignment="Center" Margin="0,10,0,0"
-                   FontSize="11" Foreground="{StaticResource TextSecondaryBrush}" />
+                   FontSize="14" FontWeight="SemiBold" Foreground="{StaticResource PrimaryBrush}" />
     </Grid>
 </Window>
