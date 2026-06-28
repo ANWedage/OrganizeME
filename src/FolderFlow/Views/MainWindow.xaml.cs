@@ -23,6 +23,13 @@ public partial class MainWindow : Window
     /// Closing the window just hides it (FolderFlow keeps running in the tray).
     /// Use the tray icon's "Exit" option to actually quit.
     /// </summary>
+    private void OnFeedbackClicked(object sender, RoutedEventArgs e)
+    {
+        var feedbackWindow = new FeedbackWindow();
+        feedbackWindow.Owner = this;
+        feedbackWindow.ShowDialog();
+    }
+
     private void MainWindow_OnClosing(object? sender, System.ComponentModel.CancelEventArgs e)
     {
         e.Cancel = true;
