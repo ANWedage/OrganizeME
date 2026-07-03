@@ -24,11 +24,10 @@ public class AppSettings
     public bool NotificationsEnabled { get; set; } = true;
 
     /// <summary>
-    /// Master switch for AI-assisted categorization (Ollama). Off by default in V1
-    /// since the AI integration is not implemented yet — this flag exists so the
-    /// Settings UI and architecture are ready for Version 2.
+    /// When true, a rename dialog is shown for each incoming file before it is moved,
+    /// allowing the user to rename the file on-the-fly.
     /// </summary>
-    public bool AiEnabled { get; set; } = false;
+    public bool RenameBeforeMoveEnabled { get; set; } = false;
 
     /// <summary>
     /// If false, FolderFlow will detect and log what it *would* do but won't

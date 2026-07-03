@@ -113,6 +113,7 @@ public partial class App : Application
         services.AddSingleton<IFileCategorizer, ExtensionFileCategorizer>();
         services.AddSingleton<IFileMoverService, FileMoverService>();
         services.AddSingleton<INotificationService, ToastNotificationService>();
+        services.AddSingleton<IRenamePromptService, WpfRenamePromptService>();
         services.AddSingleton<IFileOrganizerOrchestrator, FileOrganizerOrchestrator>();
         services.AddSingleton<IUpdateService, UpdateService>();
 

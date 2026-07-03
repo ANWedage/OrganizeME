@@ -54,8 +54,8 @@
                                   IsChecked="{Binding NotificationsEnabled}" Margin="0,0,0,10" />
                         <CheckBox Content="Automatically move files (turn off for a dry run / preview only)"
                                   IsChecked="{Binding AutoMoveEnabled}" Margin="0,0,0,10" />
-                        <CheckBox Content="Enable AI-assisted categorization (requires Ollama — coming in V2)"
-                                  IsChecked="{Binding AiEnabled}" IsEnabled="False" />
+                        <CheckBox Content="Show rename dialog before moving each file"
+                                  IsChecked="{Binding RenameBeforeMoveEnabled}" />
                     </StackPanel>
                 </Border>
 

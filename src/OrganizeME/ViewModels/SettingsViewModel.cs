@@ -15,7 +15,7 @@ public class SettingsViewModel : ViewModelBase
     private string _monitoredFolderPath = string.Empty;
     private bool _startWithWindows;
     private bool _notificationsEnabled;
-    private bool _aiEnabled;
+    private bool _renameBeforeMoveEnabled;
     private bool _autoMoveEnabled;
 
     // ── Update-check state ───────────────────────────────────────────────────
@@ -77,10 +77,10 @@ public class SettingsViewModel : ViewModelBase
         set => SetField(ref _notificationsEnabled, value);
     }
 
-    public bool AiEnabled
+    public bool RenameBeforeMoveEnabled
     {
-        get => _aiEnabled;
-        set => SetField(ref _aiEnabled, value);
+        get => _renameBeforeMoveEnabled;
+        set => SetField(ref _renameBeforeMoveEnabled, value);
     }
 
     public bool AutoMoveEnabled
@@ -121,7 +121,7 @@ public class SettingsViewModel : ViewModelBase
         MonitoredFolderPath = s.MonitoredFolderPath;
         StartWithWindows = _startupService.IsEnabled();
         NotificationsEnabled = s.NotificationsEnabled;
-        AiEnabled = s.AiEnabled;
+        RenameBeforeMoveEnabled = s.RenameBeforeMoveEnabled;
         AutoMoveEnabled = s.AutoMoveEnabled;
 
         Rules.Clear();
@@ -216,7 +216,7 @@ public class SettingsViewModel : ViewModelBase
         s.MonitoredFolderPath = MonitoredFolderPath;
         s.OrganizedRootPath = MonitoredFolderPath; // V1 keeps these the same
         s.NotificationsEnabled = NotificationsEnabled;
-        s.AiEnabled = AiEnabled;
+        s.RenameBeforeMoveEnabled = RenameBeforeMoveEnabled;
         s.AutoMoveEnabled = AutoMoveEnabled;
         s.Rules = Rules.ToList();
 

@@ -12,6 +12,7 @@ public class FileOrganizerOrchestrator : IFileOrganizerOrchestrator
     private readonly IHistoryRepository _history;
     private readonly INotificationService _notifications;
     private readonly ISettingsService _settings;
+    private readonly IRenamePromptService _renamePrompt;
     private readonly ILogger _logger;
 
     private const string FallbackCategory = "Other";
@@ -22,6 +23,7 @@ public class FileOrganizerOrchestrator : IFileOrganizerOrchestrator
         IHistoryRepository history,
         INotificationService notifications,
         ISettingsService settings,
+        IRenamePromptService renamePrompt,
         ILogger logger)
     {
         _categorizer = categorizer;
@@ -29,6 +31,7 @@ public class FileOrganizerOrchestrator : IFileOrganizerOrchestrator
         _history = history;
         _notifications = notifications;
         _settings = settings;
+        _renamePrompt = renamePrompt;
         _logger = logger.ForContext<FileOrganizerOrchestrator>();
     }
 
@@ -38,12 +41,27 @@ public class FileOrganizerOrchestrator : IFileOrganizerOrchestrator
         var extension = Path.GetExtension(filePath).TrimStart('.').ToLowerInvariant();
         var settings = _settings.Current;
 
+        // If rename-before-move is enabled, ask the user for a new name.
+        if (settings.RenameBeforeMoveEnabled && !suppressNotification)
+        {
+            var newName = await _renamePrompt.PromptRenameAsync(fileName);
+            if (!string.IsNullOrWhiteSpace(newName) && newName != fileName)
+            {
+                var dir = Path.GetDirectoryName(filePath)!;
+                var renamedPath = Path.Combine(dir, newName);
+                File.Move(filePath, renamedPath, overwrite: false);
+                filePath = renamedPath;
+                fileName = newName;
+                extension = Path.GetExtension(newName).TrimStart('.').ToLowerInvariant();
+            }
+        }
+
         var entry = new FileHistoryEntry
         {
             OriginalPath = filePath,
             FileName = fileName,
             Extension = extension,
-            AiUsed = false, // V2 will set this when the AI categorizer is used
+            AiUsed = false,
         };
 
         try
