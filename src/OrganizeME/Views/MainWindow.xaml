@@ -88,8 +88,14 @@
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
 
-                <TextBlock Grid.Row="0" Text="Recent Activity" FontWeight="SemiBold" FontSize="16"
-                           Margin="0,0,0,12" Foreground="{StaticResource TextPrimaryBrush}" />
+                <Grid Grid.Row="0" Margin="0,0,0,12">
+                    <TextBlock Text="Recent Activity" FontWeight="SemiBold" FontSize="16"
+                               Foreground="{StaticResource TextPrimaryBrush}"
+                               VerticalAlignment="Center" />
+                    <Button Content="🗑 Clear" Style="{StaticResource SecondaryButton}"
+                            HorizontalAlignment="Right" VerticalAlignment="Center"
+                            Command="{Binding ClearHistoryCommand}" />
+                </Grid>
 
                 <ListView Grid.Row="1" ItemsSource="{Binding RecentActivity}"
                           BorderThickness="0" Background="Transparent"

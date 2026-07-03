@@ -8,7 +8,6 @@
 .vs/
 
 ## VS Code
-.vscode/*
 !.vscode/launch.json
 !.vscode/tasks.json
 !.vscode/settings.json
@@ -32,4 +31,5 @@ publish/
 installer-output/
 
 
-.env
+config.bat
+node_modules

