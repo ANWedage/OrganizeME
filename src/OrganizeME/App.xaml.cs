@@ -200,10 +200,13 @@ public partial class App : Application
             // Show the update dialog on the UI thread
             Current.Dispatcher.Invoke(() =>
             {
-                var window = new FolderFlow.Views.UpdateAvailableWindow(update)
-                {
-                    Owner = _mainWindow
-                };
+                var window = new FolderFlow.Views.UpdateAvailableWindow(update);
+
+                // Only set Owner if the main window has already been shown;
+                // setting Owner on a never-shown window throws InvalidOperationException.
+                if (_mainWindow?.IsLoaded == true)
+                    window.Owner = _mainWindow;
+
                 window.ShowDialog();
             });
         }
