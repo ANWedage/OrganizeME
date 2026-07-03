@@ -10,7 +10,7 @@
     <ApplicationIcon>Resources\Icons\app.ico</ApplicationIcon>
     <AssemblyName>OrganizeME</AssemblyName>
     <RootNamespace>FolderFlow</RootNamespace>
-    <Version>1.4.0</Version>
+    <Version>1.4.1</Version>
     <Authors>Adeepa Wedage</Authors>
     <Product>OrganizeME</Product>
   </PropertyGroup>
@@ -38,6 +38,7 @@
   <ItemGroup>
     <None Update="Resources\Icons\app.ico" CopyToOutputDirectory="PreserveNewest" />
     <Resource Include="Resources\Icons\logo.png" />
+    <Resource Include="Resources\Icons\wexora_logo.png" />
   </ItemGroup>
 
 </Project>
