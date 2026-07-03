@@ -43,6 +43,7 @@ public class MainViewModel : ViewModelBase
     public RelayCommand StartMonitoringCommand { get; }
     public RelayCommand StopMonitoringCommand { get; }
     public AsyncRelayCommand RefreshHistoryCommand { get; }
+    public AsyncRelayCommand ClearHistoryCommand { get; }
 
     public MainViewModel(
         IFileWatcherService watcher,
@@ -58,6 +59,7 @@ public class MainViewModel : ViewModelBase
         StartMonitoringCommand = new RelayCommand(StartMonitoring, _ => !IsMonitoring);
         StopMonitoringCommand = new RelayCommand(StopMonitoring, _ => IsMonitoring);
         RefreshHistoryCommand = new AsyncRelayCommand(RefreshHistoryAsync);
+        ClearHistoryCommand = new AsyncRelayCommand(ClearHistoryAsync);
 
         _watcher.FileDetected += OnFileDetectedAsync;
     }
@@ -101,5 +103,19 @@ public class MainViewModel : ViewModelBase
             RecentActivity.Clear();
             foreach (var item in items) RecentActivity.Add(item);
         });
+    }
+
+    private async Task ClearHistoryAsync()
+    {
+        var result = System.Windows.MessageBox.Show(
+            "Are you sure you want to delete all recent activity? This cannot be undone.",
+            "Clear Activity",
+            System.Windows.MessageBoxButton.YesNo,
+            System.Windows.MessageBoxImage.Warning);
+
+        if (result != System.Windows.MessageBoxResult.Yes) return;
+
+        await _history.ClearAllAsync();
+        System.Windows.Application.Current?.Dispatcher.Invoke(() => RecentActivity.Clear());
     }
 }
